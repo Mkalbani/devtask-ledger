@@ -1,7 +1,7 @@
 import { STACKS_TESTNET } from '@stacks/network';
 import { makeContractDeploy, broadcastTransaction } from '@stacks/transactions';
-import fs from 'fs';
-import dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -25,12 +25,18 @@ async function deployContract() {
     const tx = await makeContractDeploy(txOptions);
     const result = await broadcastTransaction({ transaction: tx });
 
-    console.log('✅ Contract deployed successfully!');
-    console.log('📝 Transaction ID:', result);
-    console.log('🔗 View on explorer:');
-    console.log(`   https://explorer.hiro.so/txid/${result}?chain=testnet`);
-    console.log('\n⚠️  Save this contract address to your .env:');
-    console.log(`   CONTRACT_ADDRESS=<your-address>.devtask-ledger`);
+    if ('txid' in result) {
+      console.log('✅ Contract deployment broadcasted!');
+      console.log('📝 Transaction ID:', result.txid);
+      console.log(
+        `🔗 View on explorer:\n   https://explorer.hiro.so/txid/${result.txid}?chain=testnet`,
+      );
+
+      console.log('\n⚠️  After confirmation, save this to your .env:');
+      console.log(`   CONTRACT_ADDRESS=<your-address>.devtask-ledger`);
+    } else {
+      console.error('❌ Deployment failed:', result);
+    }
   } catch (error) {
     console.error('❌ Error during deployment:', error);
   }
