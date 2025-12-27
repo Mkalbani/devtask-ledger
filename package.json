@@ -19,10 +19,10 @@
     "deploy": "ts-node scripts/deploy.ts",
     "interact": "ts-node scripts/interact.ts",
     "query": "ts-node scripts/query.ts",
-    "serve": "npx http-server public -p 8080",
-    "dev:frontend": "cd frontend && npm install --no-audit --no-fund && npm run dev",
-    "build:frontend": "cd frontend && npm install --no-audit --no-fund && npm run build",
-    "preview:frontend": "cd frontend && npm install --no-audit --no-fund && npm run preview"
+  "serve": "node scripts/serve-frontend.js",
+  "dev:frontend": "cd frontend && npm install --no-audit --no-fund && npm run dev",
+  "build:frontend": "cd frontend && npm install --no-audit --no-fund && npm run build",
+  "preview:frontend": "cd frontend && npm install --no-audit --no-fund && npm run preview"
   },
   "dependencies": {
     "@nestjs/platform-express": "^10.0.0",
