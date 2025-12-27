@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevTask Ledger</title>
+    <script src="https://unpkg.com/@stacks/connect@7.8.2/dist/connect.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .wallet-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .wallet-info {
+            display: none;
+            padding: 15px;
+            background: #edf2f7;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .wallet-info.show {
+            display: block;
+        }
+
+        .address {
+            font-family: monospace;
+            font-size: 12px;
+            color: #4a5568;
+            word-break: break-all;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #38a169;
+        }
+
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .status.loading {
+            background: #bee3f8;
+            color: #2c5282;
+            border-left: 4px solid #3182ce;
+        }
+
+        .task-list {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .task-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .task-desc {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .task-time {
+            color: #a0aec0;
+            font-size: 12px;
+        }
+
+        .link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📋 DevTask Ledger</h1>
+        <p class="subtitle">Track your development tasks on Stacks blockchain</p>
+
+        <div class="wallet-section">
+            <button id="connectBtn" onclick="connectWallet()">Connect Wallet</button>
+            <button id="disconnectBtn" onclick="disconnectWallet()" style="display: none;">Disconnect</button>
+            <div id="walletInfo" class="wallet-info">
+                <strong>Connected:</strong>
+                <div class="address" id="userAddress"></div>
+                <div style="margin-top: 10px;">
+                    <strong>Tasks logged:</strong> <span id="taskCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="taskForm" style="display: none;">
+            <div class="form-group">
+                <label for="taskTitle">Task Title</label>
+                <input type="text" id="taskTitle" placeholder="e.g., Implemented user authentication" maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label for="taskDesc">Task Description</label>
+                <textarea id="taskDesc" placeholder="Describe what you accomplished..." maxlength="500"></textarea>
+            </div>
+
+            <button onclick="logTask()">Log Task to Blockchain</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div id="taskList" class="task-list" style="display: none;">
+            <h3 style="margin-bottom: 15px; color: #2d3748;">Your Recent Tasks</h3>
+            <div id="tasks"></div>
+        </div>
+    </div>
+
+    <script>
+        // UPDATE THESE VALUES
+        const CONTRACT_ADDRESS = 'ST3C1W3GS1ZWN14DSJ9744K21F03HSS37A6SKVMKQ';
+        const CONTRACT_NAME = 'devtask-ledger';
+        const NETWORK = 'testnet';
+
+        let userSession = null;
+        let userData = null;
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status show ${type}`;
+            setTimeout(() => {
+                status.classList.remove('show');
+            }, 5000);
+        }
+
+        async function connectWallet() {
+            try {
+                showStatus('Connecting wallet...', 'loading');
+
+                const authResponse = await window.StacksConnect.showConnect({
+                    appDetails: {
+                        name: 'DevTask Ledger',
+                        icon: 'https://docs.stacks.co/img/logo.svg',
+                    },
+                    redirectTo: '/',
+                    onFinish: () => {
+                        userData = userSession.loadUserData();
+                        updateUI();
+                        showStatus('Wallet connected successfully!', 'success');
+                    },
+                    userSession: new window.StacksConnect.UserSession(),
+                });
+            } catch (error) {
+                showStatus('Failed to connect wallet: ' + error.message, 'error');
+            }
+        }
+
+        function disconnectWallet() {
+            if (userSession) {
+                userSession.signUserOut();
+                userData = null;
+                updateUI();
+                showStatus('Wallet disconnected', 'success');
+            }
+        }
+
+        function updateUI() {
+            const connectBtn = document.getElementById('connectBtn');
+            const disconnectBtn = document.getElementById('disconnectBtn');
+            const walletInfo = document.getElementById('walletInfo');
+            const taskForm = document.getElementById('taskForm');
+            const userAddress = document.getElementById('userAddress');
+
+            if (userData) {
+                connectBtn.style.display = 'none';
+                disconnectBtn.style.display = 'block';
+                walletInfo.classList.add('show');
+                taskForm.style.display = 'block';
+                userAddress.textContent = userData.profile.stxAddress[NETWORK];
+
+                loadTaskCount();
+                loadTasks();
+            } else {
+                connectBtn.style.display = 'block';
+                disconnectBtn.style.display = 'none';
+                walletInfo.classList.remove('show');
+                taskForm.style.display = 'none';
+            }
+        }
+
+        async function logTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            const description = document.getElementById('taskDesc').value.trim();
+
+            if (!title || !description) {
+                showStatus('Please fill in both title and description', 'error');
+                return;
+            }
+
+            try {
+                showStatus('Submitting transaction...', 'loading');
+
+                const options = {
+                    contractAddress: CONTRACT_ADDRESS,
+                    contractName: CONTRACT_NAME,
+                    functionName: 'log-task',
+                    functionArgs: [
+                        window.StacksConnect.stringAsciiCV(title),
+                        window.StacksConnect.stringAsciiCV(description),
+                    ],
+                    network: NETWORK,
+                    appDetails: {
+                        name: 'DevTask Ledger',
+                        icon: 'https://docs.stacks.co/img/logo.svg',
+                    },
+                    onFinish: (data) => {
+                        showStatus(`Task logged! TxID: ${data.txId}`, 'success');
+                        document.getElementById('taskTitle').value = '';
+                        document.getElementById('taskDesc').value = '';
+
+                        setTimeout(() => {
+                            loadTaskCount();
+                            loadTasks();
+                        }, 2000);
+                    },
+                };
+
+                await window.StacksConnect.openContractCall(options);
+            } catch (error) {
+                showStatus('Error logging task: ' + error.message, 'error');
+            }
+        }
+
+        async function loadTaskCount() {
+            try {
+                const address = userData.profile.stxAddress[NETWORK];
+                const url = `https://api.${NETWORK}.hiro.so/v2/contracts/call-read/${CONTRACT_ADDRESS}/${CONTRACT_NAME}/get-task-count`;
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sender: address,
+                        arguments: [`0x${Buffer.from(address).toString('hex')}`]
+                    })
+                });
+
+                const data = await response.json();
+                if (data.okay && data.result) {
+                    const count = parseInt(data.result.replace('0x', ''), 16);
+                    document.getElementById('taskCount').textContent = count;
+                }
+            } catch (error) {
+                console.error('Error loading task count:', error);
+            }
+        }
+
+        async function loadTasks() {
+            // This is a simplified version - you'd need to query each task individually
+            const taskList = document.getElementById('taskList');
+            taskList.style.display = 'block';
+
+            // Placeholder for task display
+            document.getElementById('tasks').innerHTML = `
+        <p style="color: #718096;">View your tasks on the <a href="https://explorer.hiro.so/address/${userData.profile.stxAddress[NETWORK]}?chain=${NETWORK}" target="_blank" class="link">Stacks Explorer</a></p>
+      `;
+        }
+
+        // Check if user is already connected
+        window.onload = () => {
+            userSession = new window.StacksConnect.UserSession();
+            if (userSession.isUserSignedIn()) {
+                userData = userSession.loadUserData();
+                updateUI();
+            }
+        };
+    </script>
+</body>
+
+</html>

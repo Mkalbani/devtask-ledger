@@ -23,7 +23,8 @@
     "query": "ts-node scripts/query.ts",
     "get-address": "ts-node scripts/get-address.ts",
     "check-balance": "ts-node scripts/check-balance.ts",
-    "get-key": "ts-node scripts/get-private-key.ts"
+    "get-key": "ts-node scripts/get-private-key.ts",
+    "serve": "npx http-server public -p 8080"
   },
   "dependencies": {
     "@nestjs/platform-express": "^10.0.0",
