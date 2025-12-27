@@ -9,9 +9,10 @@
 
 **DevTask Ledger** is a small but extensible project that lets developers log their completed tasks on the **Stacks Testnet4** blockchain. Each task is stored on-chain, creating a transparent and verifiable record of development activity.
 
-**Why this project?**  
-- Provides meaningful **on-chain activity** for the Builder Challenge  
-- Backend-focused, lightweight, and easy to extend  
+**Why this project?**
+
+- Provides meaningful **on-chain activity** for the Builder Challenge
+- Backend-focused, lightweight, and easy to extend
 - Can be used in future for **portfolio, Talent Protocol integration, or gamification**
 
 ---
@@ -30,6 +31,7 @@
 ---
 
 ## Repository Structure
+
 ```
 devtask-ledger/
 │
@@ -46,28 +48,30 @@ devtask-ledger/
 └─ .gitignore
 ```
 
-- `contracts/`: Clarity contract files  
-- `scripts/`: scripts for deployment and interactions  
-- `src/`: optional NestJS backend for automation or API  
-- README.md: project explanation and instructions  
+- `contracts/`: Clarity contract files
+- `scripts/`: scripts for deployment and interactions
+- `src/`: optional NestJS backend for automation or API
+- README.md: project explanation and instructions
 
 ---
 
 ## Getting Started
 
 ### 1. Install dependencies
+
 ```bash
 npm install
 ```
 
 ### 2. Set up a Stacks Testnet4 wallet
 
-* Use Leather Wallet or another Testnet4-compatible wallet
-* Fund with test STX from a faucet
+- Use Leather Wallet or another Testnet4-compatible wallet
+- Fund with test STX from a faucet
 
 ### 3. Configure environment
 
 Create a `.env` file:
+
 ```
 PRIVATE_KEY=<your-testnet-wallet-private-key>
 CONTRACT_ADDRESS=<deployed-contract-address>
@@ -75,6 +79,7 @@ NETWORK=testnet
 ```
 
 ### 4. Deploy the contract
+
 ```bash
 npm run deploy
 ```
@@ -82,19 +87,22 @@ npm run deploy
 This deploys `devtask-ledger.clar` to Testnet4.
 
 ### 5. Log a task
+
 ```bash
 npm run interact -- "Implemented NestJS backend script"
 ```
 
-* Calls `log-task` function in the contract
-* Each call counts as on-chain activity for the leaderboard
+- Calls `log-task` function in the contract
+- Each call counts as on-chain activity for the leaderboard
 
 ### 6. Optional: NestJS API
 
 You can create endpoints to:
-* Log tasks programmatically
-* Query task count per developer
-* Automate multiple task logs for testing
+
+- Log tasks programmatically
+- Query task count per developer
+- Automate multiple task logs for testing
+
 ```bash
 npm run start:dev
 ```
@@ -116,6 +124,7 @@ npx serve public
 Open http://localhost:3000 (or the port printed by the server) and use the Connect button to interact with Testnet wallets.
 
 Notes:
+
 - The frontend currently loads Stacks UMD bundles from a CDN and has fallbacks to ESM CDNs. For production, consider bundling dependencies with a tool like Vite and installing `@stacks/connect` and `@stacks/transactions` from npm.
 - Ensure `.env` (not committed) contains `PRIVATE_KEY` if you run scripts in `scripts/` that need it.
 
@@ -137,8 +146,7 @@ npm run build:frontend
 npm run preview:frontend
 ```
 
-Note about the legacy `public/` folder
--------------------------------------
+## Note about the legacy `public/` folder
 
 The repository previously shipped a simple static frontend under `public/`. That implementation relied on CDN imports and proved brittle. The recommended, durable frontend is the Vite app in `frontend/` (see instructions above).
 
@@ -150,12 +158,11 @@ To serve the legacy `public/` copy (not recommended):
 npx http-server public -p 8080
 ```
 
-
 ## GitHub & Challenge Notes
 
-* Daily commits = points for Builder Challenge
-* On-chain interactions = leaderboard points
-* WalletKit / SDK usage = additional scoring multiplier
+- Daily commits = points for Builder Challenge
+- On-chain interactions = leaderboard points
+- WalletKit / SDK usage = additional scoring multiplier
 
 **Tip:** Make daily small commits, call `log-task` multiple times, and optionally integrate WalletKit SDK to maximize points.
 
@@ -163,10 +170,10 @@ npx http-server public -p 8080
 
 ## Future Extensibility
 
-* Add task status (completed/pending)
-* Gamification: points, badges, leaderboard
-* Integration with Talent Protocol reputation
-* Optional frontend dashboard
+- Add task status (completed/pending)
+- Gamification: points, badges, leaderboard
+- Integration with Talent Protocol reputation
+- Optional frontend dashboard
 
 ---
 

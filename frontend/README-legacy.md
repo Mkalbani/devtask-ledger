@@ -3,6 +3,7 @@
 This file was moved from `public/README.md` when the legacy static frontend was removed from the repository.
 
 Notes:
+
 - The legacy `public/` folder relied on CDN imports and is deprecated in favor of the Vite-based frontend in `frontend/`.
 - The minimal assets required for runtime compatibility (favicon and `.well-known` entries) were copied into `frontend/public/` so tools or services that expect those paths continue to work.
 
