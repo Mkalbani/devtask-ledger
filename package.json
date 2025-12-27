@@ -20,7 +20,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "deploy": "ts-node scripts/deploy.ts",
     "interact": "ts-node scripts/interact.ts",
-    "query": "ts-node scripts/query.ts"
+    "query": "ts-node scripts/query.ts",
+    "get-address": "ts-node scripts/get-address.ts",
+    "check-balance": "ts-node scripts/check-balance.ts",
+    "get-key": "ts-node scripts/get-private-key.ts"
   },
   "dependencies": {
     "@nestjs/platform-express": "^10.0.0",

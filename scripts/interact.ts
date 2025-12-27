@@ -4,7 +4,7 @@ import {
   makeContractCall,
   stringAsciiCV,
 } from '@stacks/transactions';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -32,10 +32,16 @@ async function logTask(title: string, description: string) {
     const tx = await makeContractCall(txOptions);
     const result = await broadcastTransaction({ transaction: tx });
 
-    console.log('✅ Task logged successfully!');
-    console.log('📝 Transaction ID:', result);
-    console.log('🔗 View on explorer:');
-    console.log(`   https://explorer.hiro.so/txid/${result}?chain=testnet`);
+    if (typeof result === 'object' && 'error' in result) {
+      console.error('❌ Transaction failed:', result.error);
+      console.error('Reason:', result.reason);
+    } else {
+      const txid = typeof result === 'string' ? result : result.txid;
+      console.log('✅ Task logged successfully!');
+      console.log('📝 Transaction ID:', txid);
+      console.log('🔗 View on explorer:');
+      console.log(`   https://explorer.hiro.so/txid/${txid}?chain=testnet`);
+    }
   } catch (error) {
     console.error('❌ Error logging task:', error);
   }

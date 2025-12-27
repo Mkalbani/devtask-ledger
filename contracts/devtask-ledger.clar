@@ -24,7 +24,7 @@
     (
       (developer tx-sender)
       (task-id (get-next-task-id developer))
-      (timestamp block-height)
+      (timestamp stacks-block-height)
     )
     (map-set tasks
       { developer: developer, task-id: task-id }
