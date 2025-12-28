@@ -3,20 +3,28 @@ import { logTask } from './interact'; // your existing function
 
 const tasks = [
   {
-    title: 'Refactored deployment workflow',
-    description: 'Separated deploy and interact logic for cleaner scripts',
+    title: 'Configured Stacks testnet environment',
+    description:
+      'Set up network, faucet funding, and testnet wallet for development',
   },
   {
-    title: 'Tested contract calls with low fees',
-    description: 'Observed fee behavior and rejection conditions on testnet',
+    title: 'Implemented batch interaction script',
+    description:
+      'Created reusable script to submit multiple contract calls sequentially',
   },
   {
-    title: 'Improved developer ergonomics',
-    description: 'Simplified CLI arguments for task logging script',
+    title: 'Handled broadcastTransaction responses',
+    description:
+      'Improved handling for tx success, rejection, and error objects',
   },
   {
-    title: 'Documented environment variables',
-    description: 'Clarified PRIVATE_KEY, CONTRACT_ADDRESS, and network usage',
+    title: 'Validated contract arguments',
+    description: 'Ensured ASCII string limits and safe argument encoding',
+  },
+  {
+    title: 'Reviewed Clarity contract logic',
+    description:
+      'Audited log-task function for correctness and data consistency',
   },
 ];
 
