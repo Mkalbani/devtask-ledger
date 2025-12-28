@@ -23,6 +23,7 @@
   "dev:frontend": "cd frontend && npm install --no-audit --no-fund && npm run dev",
   "build:frontend": "cd frontend && npm install --no-audit --no-fund && npm run build",
   "preview:frontend": "cd frontend && npm install --no-audit --no-fund && npm run preview"
+  ,"dev:frontend:docker":"docker run --rm -it -v $(pwd)/frontend:/app -w /app -p 5173:5173 node:22-bullseye sh -c \"npm ci --no-audit --no-fund && npm run dev -- --host 0.0.0.0\""
   },
   "dependencies": {
     "@nestjs/platform-express": "^10.0.0",
