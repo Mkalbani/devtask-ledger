@@ -11,7 +11,7 @@ dotenv.config();
 const PRIVATE_KEY = process.env.PRIVATE_KEY!;
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS!;
 
-async function logTask(title: string, description: string) {
+export async function logTask(title: string, description: string) {
   try {
     const [address, contractName] = CONTRACT_ADDRESS.split('.');
 
@@ -47,8 +47,11 @@ async function logTask(title: string, description: string) {
   }
 }
 
-const title = process.argv[2] || 'Sample Task';
-const description =
-  process.argv[3] || 'This is a sample task logged to the blockchain';
+// If this file is executed directly (node ts-node), run with default args.
+if (require.main === module) {
+  const title = process.argv[2] || 'Sample Task';
+  const description =
+    process.argv[3] || 'This is a sample task logged to the blockchain';
 
-logTask(title, description);
+  logTask(title, description);
+}
