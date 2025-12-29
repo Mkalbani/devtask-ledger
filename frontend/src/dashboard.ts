@@ -40,6 +40,20 @@ export function renderDashboard(): void {
         <canvas id="activityChart" style="max-height: 300px;"></canvas>
       </div>
 
+      <div class="search-section">
+        <h3 style="margin-bottom: 15px;">🔍 Search & Filter</h3>
+        <div class="input-group">
+          <input id="searchInput" placeholder="Search by address..." style="flex: 1;" />
+          <button id="searchBtn" class="secondary">Search</button>
+        </div>
+        <div class="filter-chips">
+          <div class="chip active" data-filter="all">All</div>
+          <div class="chip" data-filter="top10">Top 10</div>
+          <div class="chip" data-filter="active">Active Today</div>
+          <div class="chip" data-filter="newcomers">Newcomers</div>
+        </div>
+      </div>
+
       <div class="tabs">
         <button class="tab active" data-tab="leaderboard">🏆 Leaderboard</button>
         <button class="tab" data-tab="recent">📝 Recent Activity</button>
@@ -107,6 +121,21 @@ function setupDashboardTabs(): void {
   document
     .getElementById('exportJSONBtn')
     ?.addEventListener('click', exportJSON);
+  document
+    .getElementById('searchBtn')
+    ?.addEventListener('click', performSearch);
+
+  // Filter chips
+  document.querySelectorAll('.chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      document
+        .querySelectorAll('.chip')
+        .forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      const filter = chip.getAttribute('data-filter');
+      applyDashboardFilter(filter || 'all');
+    });
+  });
 }
 
 // Mock data for demo - in production, you'd scan blockchain events
@@ -211,7 +240,9 @@ function renderLeaderboard(stats: DeveloperStats[]): void {
       <div class="leaderboard-item">
         <div class="rank">${medal}</div>
         <div class="developer-info">
-          <div class="developer-address">${shortenAddress(dev.address)}</div>
+          <a href="/profile/${dev.address}" class="developer-address" style="text-decoration: none; color: inherit;">
+            ${shortenAddress(dev.address)}
+          </a>
           <div class="developer-meta">
             <a href="https://explorer.hiro.so/address/${dev.address}?chain=${NETWORK}" target="_blank" class="link">
               View on Explorer
@@ -430,4 +461,46 @@ function downloadFile(
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function performSearch(): void {
+  const query = (
+    document.getElementById('searchInput') as HTMLInputElement
+  ).value.trim();
+  if (!query) return;
+
+  const filtered = dashboardData.filter((dev) =>
+    dev.address.toLowerCase().includes(query.toLowerCase()),
+  );
+
+  if (filtered.length === 0) {
+    alert('No developers found matching your search');
+    return;
+  }
+
+  renderLeaderboard(filtered);
+}
+
+function applyDashboardFilter(filter: string): void {
+  let filtered = [...dashboardData];
+
+  switch (filter) {
+    case 'top10':
+      filtered = filtered
+        .sort((a, b) => b.taskCount - a.taskCount)
+        .slice(0, 10);
+      break;
+    case 'active':
+      // Mock: show all as active
+      filtered = dashboardData;
+      break;
+    case 'newcomers':
+      // Mock: show developers with fewer tasks
+      filtered = filtered.filter((d) => d.taskCount <= 5);
+      break;
+    default:
+      filtered = dashboardData;
+  }
+
+  renderLeaderboard(filtered);
 }

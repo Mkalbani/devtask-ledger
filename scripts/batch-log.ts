@@ -3,28 +3,29 @@ import { logTask } from './interact'; // your existing function
 
 const tasks = [
   {
-    title: 'Configured Stacks testnet environment',
+    title: 'Improved Stacks testnet RPC configuration',
     description:
-      'Set up network, faucet funding, and testnet wallet for development',
+      'Updated Stacks testnet network configuration to use the Hiro API endpoint and avoid frequent connection timeouts during contract interactions.',
   },
   {
-    title: 'Implemented batch interaction script',
+    title: 'Added extended fetch timeout for blockchain calls',
     description:
-      'Created reusable script to submit multiple contract calls sequentially',
+      'Configured custom fetch timeout settings to prevent Undici connect timeout errors when fetching account nonce from Stacks testnet.',
   },
   {
-    title: 'Handled broadcastTransaction responses',
+    title: 'Diagnosed Stacks testnet connectivity failures',
     description:
-      'Improved handling for tx success, rejection, and error objects',
+      'Traced repeated contract call failures to RPC-level connection timeouts occurring before transaction signing or broadcast.',
   },
   {
-    title: 'Validated contract arguments',
-    description: 'Ensured ASCII string limits and safe argument encoding',
+    title: 'Hardened blockchain interaction scripts',
+    description:
+      'Improved resilience of task-logging scripts by isolating network errors from application and signing logic.',
   },
   {
-    title: 'Reviewed Clarity contract logic',
+    title: 'Validated Stacks testnet node availability',
     description:
-      'Audited log-task function for correctness and data consistency',
+      'Performed direct API health checks against testnet endpoints to confirm node responsiveness prior to submitting batch transactions.',
   },
 ];
 

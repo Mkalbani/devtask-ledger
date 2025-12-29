@@ -71,8 +71,34 @@ export function renderApp(): void {
         <h3>Your Tasks</h3>
         <p style="color: #718096;">View your tasks on the <a href="#" id="explorerLink" target="_blank" class="link">Stacks Explorer</a></p>
       </div>
+
+      <div class="section" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 20px; border-radius: 12px;">
+        <h3 style="margin-bottom: 15px;">🌍 Global Stats</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+          <div style="text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #92400e;" id="globalDevCount">...</div>
+            <div style="font-size: 12px; color: #78350f;">Active Developers</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 24px; font-weight: 700; color: #92400e;" id="globalTaskCount">...</div>
+            <div style="font-size: 12px; color: #78350f;">Total Tasks</div>
+          </div>
+          <div style="text-align: center;">
+            <a href="/dashboard" style="text-decoration: none;">
+              <button class="secondary" style="margin-top: 8px;">View Dashboard →</button>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   `;
+}
+
+// Load global stats for widget
+export async function loadGlobalStats(): Promise<void> {
+  // Mock data - in production would aggregate from blockchain
+  document.getElementById('globalDevCount')!.textContent = '3';
+  document.getElementById('globalTaskCount')!.textContent = '12+';
 }
 
 export function showStatus(

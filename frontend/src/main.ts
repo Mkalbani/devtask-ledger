@@ -1,6 +1,7 @@
 import './styles.css';
-import { renderApp, setupTabSwitching } from './ui';
+import { renderApp, setupTabSwitching, loadGlobalStats } from './ui';
 import { renderDashboard } from './dashboard';
+import { renderProfile } from './profile';
 import {
   connectLeather,
   connectXverse,
@@ -16,11 +17,19 @@ function App() {
 
   if (currentPath === '/dashboard') {
     renderDashboard();
+  } else if (currentPath.startsWith('/profile/')) {
+    const address = currentPath.split('/').pop();
+    if (address) {
+      renderProfile(address);
+    } else {
+      window.location.href = '/dashboard';
+    }
   } else {
     renderApp();
     setupTabSwitching();
     wireUpEventListeners();
     initializeAuth();
+    loadGlobalStats();
   }
 }
 
