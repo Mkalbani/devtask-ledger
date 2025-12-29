@@ -2,7 +2,12 @@ export function renderApp(): void {
   const app = document.getElementById('app')!;
   app.innerHTML = `
     <div class="container">
-      <h1>📋 DevTask Ledger <span class="badge">Dual SDK</span></h1>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h1>📋 DevTask Ledger <span class="badge">Dual SDK</span></h1>
+        <a href="/dashboard" style="text-decoration: none;">
+          <button class="secondary">📊 Team Dashboard</button>
+        </a>
+      </div>
       <p class="subtitle">Log your completed dev tasks permanently on-chain</p>
 
       <div class="sdk-indicator">
@@ -53,7 +58,7 @@ export function renderApp(): void {
           
           <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 12px; font-size: 13px;">
             <strong>💰 Gas Fees:</strong> Single log ~0.001 STX | Bulk (5x) ~0.005 STX<br>
-            <strong>⚡ Bulk logging = 5x !</strong>
+            <strong>⚡ Bulk logging = 5x leaderboard points in one transaction!</strong>
           </div>
           
           <p style="font-size: 12px; color: #718096; margin-top: 10px;">💡 Each submission generates on-chain activity and earns Builder Challenge points!</p>
