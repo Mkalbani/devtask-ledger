@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Developer {
+  address      String   @id @db.VarChar(64)
+  taskCount    Int      @default(0) @map("task_count")
+  firstTaskAt  DateTime? @map("first_task_at")
+  lastTaskAt   DateTime? @map("last_task_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  tasks        Task[]
+  achievements Achievement[]
+  activities   ActivityLog[]
+
+  @@index([taskCount])
+  @@map("developers")
+}
+
+model Task {
+  id               Int      @id @default(autoincrement())
+  developerAddress String   @map("developer_address") @db.VarChar(64)
+  taskId           Int      @map("task_id")
+  title            String   @db.VarChar(100)
+  description      String?  @db.Text
+  blockHeight      BigInt   @map("block_height")
+  txId             String   @map("tx_id") @db.VarChar(66)
+  timestamp        DateTime
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  // Relations
+  developer Developer @relation(fields: [developerAddress], references: [address])
+
+  @@unique([developerAddress, taskId])
+  @@index([developerAddress])
+  @@index([timestamp])
+  @@index([txId])
+  @@map("tasks")
+}
+
+model Achievement {
+  id               Int      @id @default(autoincrement())
+  developerAddress String   @map("developer_address") @db.VarChar(64)
+  achievementId    String   @map("achievement_id") @db.VarChar(50)
+  unlockedAt       DateTime @default(now()) @map("unlocked_at")
+
+  // Relations
+  developer Developer @relation(fields: [developerAddress], references: [address])
+
+  @@unique([developerAddress, achievementId])
+  @@map("achievements")
+}
+
+model ActivityLog {
+  id               Int      @id @default(autoincrement())
+  developerAddress String   @map("developer_address") @db.VarChar(64)
+  actionType       String   @map("action_type") @db.VarChar(50)
+  metadata         Json?
+  timestamp        DateTime @default(now())
+
+  // Relations
+  developer Developer @relation(fields: [developerAddress], references: [address])
+
+  @@index([timestamp])
+  @@map("activity_log")
+}

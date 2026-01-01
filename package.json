@@ -19,22 +19,28 @@
     "deploy": "ts-node scripts/deploy.ts",
     "interact": "ts-node scripts/interact.ts",
     "query": "ts-node scripts/query.ts",
-  "serve": "node scripts/serve-frontend.js",
-  "dev:frontend": "cd frontend && npm install --no-audit --no-fund && npm run dev",
-  "build:frontend": "cd frontend && npm install --no-audit --no-fund && npm run build",
-  "preview:frontend": "cd frontend && npm install --no-audit --no-fund && npm run preview"
-  ,"dev:frontend:docker":"docker run --rm -it -v $(pwd)/frontend:/app -w /app -p 5173:5173 node:22-bullseye sh -c \"npm ci --no-audit --no-fund && npm run dev -- --host 0.0.0.0\""
+    "serve": "node scripts/serve-frontend.js",
+    "backend": "ts-node backend/src/server.ts",
+    "backend:dev": "nodemon backend/src/server.ts",
+    "db:setup": "psql -d devtask_ledger -f backend/schema.sql",
+    "dev:frontend": "cd frontend && npm install --no-audit --no-fund && npm run dev",
+    "build:frontend": "cd frontend && npm install --no-audit --no-fund && npm run build",
+    "preview:frontend": "cd frontend && npm install --no-audit --no-fund && npm run preview",
+    "dev:frontend:docker": "docker run --rm -it -v $(pwd)/frontend:/app -w /app -p 5173:5173 node:22-bullseye sh -c \"npm ci --no-audit --no-fund && npm run dev -- --host 0.0.0.0\""
   },
   "dependencies": {
-    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-express": "^11.1.11",
+    "@prisma/client": "^7.2.0",
     "@stacks/network": "^7.3.1",
     "dotenv": "^17.2.3",
+    "prisma": "^7.2.0",
+    "redis": "^5.10.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@nestjs/schematics": "^10.0.0",
-    "@nestjs/testing": "^10.0.0",
+    "@nestjs/testing": "^11.1.11",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.19.27",
     "@types/supertest": "^6.0.0",
@@ -53,5 +59,4 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
   }
-
 }
